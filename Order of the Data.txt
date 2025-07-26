@@ -1,0 +1,6 @@
+The folder contains STFT Spectrograms in the order:
+1. Images from 1-32 represent Acceleration in X-direction (Ax)
+2. images from 33-64 represent Acceleration in Y-direction (Ay)
+3. images from 65-96 represent Audio signal data (Mp)
+
+The x-axis of the image is Time in sec, and the y-axis of the image is frequency in Hz.
