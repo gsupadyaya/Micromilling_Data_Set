@@ -1,0 +1,74 @@
+The pseudocode for the current study is as given below, the analysis of the data is done in python environment (3.12):
+BEGIN
+  Step 1. Initialize Environment
+IMPORT pandas, numpy, matplotlib.pyplot, seaborn, tensorflow.keras, sklearn (train_test_split, metrics), cv2, shap
+CONFIGURE global plot settings (font size, DPI)
+  Step 2. Load & Preprocess Data
+  IF image dataset THEN
+    LOAD and RESIZE images → target shape (e.g. 224×224)
+    NORMALIZE pixel values (÷255)
+    APPLY data augmentation (rotate, zoom, shift, shear, flip)
+  ELSE
+    LOAD tabular data (CSV/Excel)
+    EXTRACT X features and y target
+    IMPUTE missing values
+    STANDARDIZE features (z-score)
+  ENDIF
+  SAVE preprocessed subsets
+  Step 3. Split Data
+SPLIT X, y into X_train, X_test, y_train, y_test (test_size=0.2)
+IF image data THEN SCALE X_train, X_test (÷255)
+  Step 4. Build & Compile CNN
+PRINT "Building model..."
+DEFINE CNN:
+    Input → Conv2D + ReLU → MaxPool → Dropout → … → Flatten → Dense(256, ReLU) → Output(Softmax)
+  COMPILE(model, optimizer=Adam(lr=0.001), loss=categorical_crossentropy, metrics=[accuracy])
+PRINT "Model ready."
+  Step 5. Train Model
+PRINT "Training..."
+  SET callbacks: EarlyStopping(patience=3), ModelCheckpoint, LearningRateScheduler
+  FIT model on training data (epochs=50, batch_size=32, validation=(X_test, y_test), callbacks)
+PRINT "Training complete."
+  Step 6. Evaluate Model
+PRINT "Evaluating..."
+EVALUATE on test set → accuracy, precision, recall, F1, AUC
+COMPUTE confusion_matrix, classification_report
+PRINT "Evaluation complete."
+  Step 7. Visualize Results
+  PRINT "Generating visualizations..."
+  PLOT accuracy & loss curves
+  PLOT confusion heatmap
+  PLOT ROC & PR curves
+  PLOT SHAP summary/beeswarm/dependence plots
+  SAVE all figures
+    Step 8. Predict Unlabeled Data
+  PRINT "Predicting unlabeled..."
+  LOAD & preprocess unlabeled inputs
+  PREDICT with model
+  SAVE predictions (CSV/JSON)
+  PRINT "Prediction done."
+  Step 9. Feature Importance (FI): PDP-ICE or SHAP, LIME
+  PRINT "Computing Test..."
+  INIT explainer = FI.KernelExplainer(model.predict, background_data)
+  CALCULATE FI_values
+  GENERATE FI plots (summary, waterfall, dependence)
+  PRINT "FI analysis done."
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

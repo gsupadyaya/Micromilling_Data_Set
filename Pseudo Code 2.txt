@@ -1,0 +1,40 @@
+The pseudocode for the adopted strategy of Pseudo-labeling and Fine-tuning during training is given below:
+BEGIN
+Step 1: Initialization
+  LOAD pre-trained CNN model (trained on labelled images)
+  FREEZE the convolutional blocks (low-level feature detectors - as required)
+  SET fine-tuning parameters (learning rate, optimizer, loss function)
+Step 2: Unlabeled Data Prediction
+  FOR each sample in unlabeled dataset 
+      Do COMPUTE softmax probabilities using the CNN model
+      IF maximum softmax probability ≥ 0.90 
+Then ASSIGN provisional pseudo-label corresponding to highest probability class.
+      ELSE
+          DISCARD sample from pseudo-labeled dataset
+      ENDIF
+  ENDFOR
+Step 3: Pseudo-labeled Dataset Preparation
+  MERGE original labeled data with pseudo-labeled data
+  ASSIGN loss weights based on softmax probabilities:
+      - IF softmax ≥ 0.95: loss_weight = 1.0 (high confidence)
+      - IF 0.90 ≤ softmax < 0.95: loss_weight = scaled between 0.5–0.8 (moderate confidence)
+Step 4: Secondary Fine-tuning Pass
+  INITIALIZE loss function
+  FOR each epoch DO
+      TRAIN CNN model using combined dataset (labeled + pseudo-labeled)
+      COMPUTE weighted loss using assigned loss weights
+      VALIDATE model performance on separate validation set 
+      MONITOR validation loss
+      IF validation loss improvement < 0.01% for 5 consecutive epochs THEN
+          APPLY early stopping
+          EXIT training loop
+      ENDIF
+  ENDFOR
+Step 5: Post-training Evaluation
+  EVALUATE model robustness:
+CALCULATE accuracy, precision, recall, F1-score, and calibration error
+SELECT optimal confidence threshold (0.85) based on maximal F1-score for the unlabelled data evaluation
+GENERATE confusion matrices, ROC, and precision-recall curves for analysis
+PERFORM k-fold cross validation
+STORE final fine-tuned CNN model for future inference
+END
